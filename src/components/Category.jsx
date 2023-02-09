@@ -1,26 +1,61 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
-const keyword = '';
+import { SearchContext } from '../context';
+
 const API_KEY = import.meta.env.VITE_apiKey;
 
 const Category = () => {
   const [news, setNews] = useState([]);
+  const { searchTerm } = useContext(SearchContext);
   let { cat_name } = useParams();
-  // const [searchTerm, setSearchTerm] = useState('');
-  const FEATURED_API = `https://newsapi.org/v2/top-headlines?country=tr&apiKey=${API_KEY}`;
-  const CAT_API = `https://newsapi.org/v2/top-headlines?country=tr&category=${cat_name}&apiKey=${API_KEY}`;
-  const SEARCH_API = `https://newsapi.org/v2/everything?q=${keyword}&apiKey=${API_KEY}`;
- 
+
+  const NEWS_API_URL = new URL('https://newsapi.org/v2/');
+
+  const TOP_HEADLINES_API_URL = new URL('top-headlines', NEWS_API_URL);
+  TOP_HEADLINES_API_URL.searchParams.set('apiKey', API_KEY);
+  TOP_HEADLINES_API_URL.searchParams.set('country', 'tr');
+
+  const EVERYTHING_API_URL = new URL('everything', NEWS_API_URL);
+  EVERYTHING_API_URL.searchParams.set('apiKey', API_KEY);
+
   useEffect(() => {
-    if(cat_name) {
+    if (!searchTerm) {
+      TOP_HEADLINES_API_URL.searchParams.delete('category');
+
       axios
-      .get(CAT_API)
-      .then((res) => setNews(res.data.articles))
-      .catch((err) => console.error(err))
+        .get(TOP_HEADLINES_API_URL.toString())
+        .then((res) => setNews(res.data.articles))
+        .catch((err) => console.error(err));
     }
-  }, [cat_name])
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (cat_name) {
+      TOP_HEADLINES_API_URL.searchParams.set('category', cat_name);
+
+      axios
+        .get(TOP_HEADLINES_API_URL.toString())
+        .then((res) => setNews(res.data.articles))
+        .catch((err) => console.error(err));
+
+      return;
+    }
+  }, [cat_name]);
+
+  useEffect(() => {
+    if (searchTerm) {
+      EVERYTHING_API_URL.searchParams.set('q', searchTerm);
+
+      axios
+        .get(EVERYTHING_API_URL.toString())
+        .then((res) => setNews(res.data.articles))
+        .catch((err) => console.error(err));
+
+      return;
+    }
+  }, [searchTerm]);
 
   return (
     <>
@@ -28,7 +63,7 @@ const Category = () => {
         <h2 className="text-uppercase">{cat_name}</h2>
         <div className="container d-flex flex-column justify-content-center align-items-center my-3">
           {news
-            ? news.map((items,i) => (
+            ? news.map((items, i) => (
                 <div key={i}>
                   <div
                     className="container my-3 p-3"
@@ -43,7 +78,7 @@ const Category = () => {
                       <img
                         src={items.urlToImage}
                         className="img-fluid"
-                        loading='lazy'
+                        loading="lazy"
                         style={{
                           width: '100%',
                           height: '300px',
