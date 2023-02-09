@@ -1,7 +1,7 @@
 // import Carousel from 'react-bootstrap/Carousel';
 import FetchData from '../components/FetchData';
 
-const Home = ({content, description, title, urlToImage, publishedAt}) => {
+const Home = () => {
   return (
     <div>
     <FetchData/>
