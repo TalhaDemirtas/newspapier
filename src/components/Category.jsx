@@ -1,37 +1,35 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-const cat_name = 'general';
 const keyword = '';
 const API_KEY = import.meta.env.VITE_apiKey;
 
-const FetchData = ({ cat_name }) => {
+const Category = () => {
   const [news, setNews] = useState([]);
-  // const [loading, setLoading] = useState(false);
+  let { cat_name } = useParams();
   // const [searchTerm, setSearchTerm] = useState('');
   const FEATURED_API = `https://newsapi.org/v2/top-headlines?country=tr&apiKey=${API_KEY}`;
   const CAT_API = `https://newsapi.org/v2/top-headlines?country=tr&category=${cat_name}&apiKey=${API_KEY}`;
-  const SEARCH_API = `https://newsapi.org/v2/everything?q=${keyword}&apiKey=f7b7bdf7c059418ca9e21e89ead3e1a1`;
-  console.log('cat name', cat_name);
-  const getNews = async () => {
-    await axios
-      .get(cat_name ? CAT_API : FEATURED_API)
-      .then((res) => setNews(res.data.articles))
-      .catch((err) => console.log(err));
-    // .finally(() => setLoading(false));
-  };
+  const SEARCH_API = `https://newsapi.org/v2/everything?q=${keyword}&apiKey=${API_KEY}`;
+ 
   useEffect(() => {
-    getNews();
-  }, []);
+    if(cat_name) {
+      axios
+      .get(CAT_API)
+      .then((res) => setNews(res.data.articles))
+      .catch((err) => console.error(err))
+    }
+  }, [cat_name])
 
   return (
     <>
       <div className="container my-3">
-        <h3>Top Headlines</h3>
+        <h2 className="text-uppercase">{cat_name}</h2>
         <div className="container d-flex flex-column justify-content-center align-items-center my-3">
           {news
-            ? news.map((items, index) => (
-                <>
+            ? news.map((items,i) => (
+                <div key={i}>
                   <div
                     className="container my-3 p-3"
                     style={{
@@ -45,6 +43,7 @@ const FetchData = ({ cat_name }) => {
                       <img
                         src={items.urlToImage}
                         className="img-fluid"
+                        loading='lazy'
                         style={{
                           width: '100%',
                           height: '300px',
@@ -58,7 +57,7 @@ const FetchData = ({ cat_name }) => {
                       View More
                     </a>
                   </div>
-                </>
+                </div>
               ))
             : 'LOADING...'}
         </div>
@@ -67,4 +66,4 @@ const FetchData = ({ cat_name }) => {
   );
 };
 
-export default FetchData;
+export default Category;

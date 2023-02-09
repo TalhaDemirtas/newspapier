@@ -13,6 +13,7 @@ const Header = () => {
         <Navbar.Collapse id="responsive-navbar-nav">
         <Navbar.Brand className='font-weight-bold' style={{fontSize:"30px", color:"aquamarine"}}>Topics</Navbar.Brand>
           <Nav className="me-auto">
+          <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/general">General</Nav.Link>
             <Nav.Link href="/business">Bussiness</Nav.Link>
             <Nav.Link href="/health">Health</Nav.Link>

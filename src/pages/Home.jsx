@@ -1,10 +1,9 @@
 // import Carousel from 'react-bootstrap/Carousel';
-import FetchData from '../components/FetchData';
+import Category from '../components/Category';
 
 const Home = () => {
   return (
-    <div>
-    <FetchData/>
+    <>
     {/* <Carousel>
       <Carousel.Item>
         <img
@@ -30,7 +29,8 @@ const Home = () => {
         </Carousel.Caption>
       </Carousel.Item>
     </Carousel> */}
-    </div>
+    <Category/>
+    </>
   )
 }
 
