@@ -32,7 +32,7 @@ const Home = () => {
               }}
             />
             <Carousel.Caption>
-              <h3>{item.title}</h3>
+              <h3 className='bg-dark'>{item.title}</h3>
             </Carousel.Caption>
           </Carousel.Item>
         ))}
