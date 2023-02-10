@@ -1,37 +1,45 @@
-// import Carousel from 'react-bootstrap/Carousel';
-import Category from '../components/Category';
+import { useEffect,useState } from 'react';
+import { NewsService } from '../service';
+import Carousel from 'react-bootstrap/Carousel';
+import Category from './Category';
+
+const service = new NewsService();
+// service.pageSize = 3;
 
 const Home = () => {
-  return (
-    <>
-    {/* <Carousel>
-      <Carousel.Item>
-        <img
-          loading="lazy"
-          className="d-block w-75"
-          src={urlToImage}
-          alt="N1"
-        />
-        <Carousel.Caption>
-          <h3>{title}</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        <img
-          className="d-block w-75"
-          src="https://picsum.photos/536/354"
-          alt="Second slide"
-        />
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-    </Carousel> */}
-    <Category/>
-    </>
-  )
-}
+  const [topNews, setTopNews] = useState([]);
+  useEffect(() => {
+    service
+      .getTopHeadlines()
+      .then((res) => setTopNews(res.data.articles))
+      .catch((err) => console.error(err));
+  }, []);
 
-export default Home
+  return (
+    <div className='container my-3'>
+    <h2>Home</h2>
+      <Carousel>
+        {topNews.slice(0, 3).map((item,i) => (
+          <Carousel.Item key={i}>
+            <img
+              loading="lazy"
+              className="d-block rounded mx-auto"
+              src={item.urlToImage}
+              alt="caro"
+              style={{
+                height:"75vh",
+                aspectRatio:"16/9"
+              }}
+            />
+            <Carousel.Caption>
+              <h3>{item.title}</h3>
+            </Carousel.Caption>
+          </Carousel.Item>
+        ))}
+      </Carousel>
+      <Category />
+    </div>
+  );
+};
+
+export default Home;
