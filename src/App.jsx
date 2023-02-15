@@ -3,7 +3,7 @@ import Home from './pages/Home';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Category from './pages/Category';
 import Aboutme from './pages/Aboutme';
-import Navi from './components/navi';
+import Navi from './components/Navi';
 import Footer from './components/Footer';
 
 function App() {
